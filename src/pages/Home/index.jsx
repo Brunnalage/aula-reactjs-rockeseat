@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import './styles.css';
-
+import { useForm } from "react-hook-form";
 import { Card } from '../../components/Card/index';
 
 function Home() {
   const [studentName, setStudentName] = useState();
   const [students, setStudents] = useState([]);
   const [user, setUser] = useState({ name: '', avatar: '' });
+
+  const { register, formState: { errors }, handleSubmit } = useForm();
+  const onSubmit = (data) => console.log(data);
 
   function handleAddStudent() {
     const newStudent = {
@@ -46,10 +49,11 @@ function Home() {
         </div>
       </header>
 
-
-      <input type="text"
-        placeholder="Digite o nome..."
+    <form onSubmit={handleSubmit(onSubmit)}>
+           <input type="text"
+        placeholder="Digite o nome..." {...register("firstName", { required: true })}         
         onChange={e => setStudentName(e.target.value)} />
+        {errors.firstName?.type === 'required' && "First name is required"}
 
       <button type="button" onClick={handleAddStudent}>
         Adicionar</button>
@@ -61,7 +65,9 @@ function Home() {
             name={student.name}
             time={student.time} />))
       }
-
+      <button type="submit">Enviar</button>
+    </form>
+ 
     </div>
   )
 }
